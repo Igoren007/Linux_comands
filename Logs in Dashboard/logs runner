@@ -1,0 +1,32 @@
+sin1-.*-series-charts-free-.*-runner-.*/runner
+В запросе указать [ERROR]
+
+Выборка по нескольким:
+(sin1|tyo1)-.*-series-charts-free-.*-runner-.*/runner
+---------------------------------------------------------------------
+
+Too big inbound streaming heartbeat:
+
+имя контейнера/udf
+В запросе указать lag=
+hkg1-backbone-hub-streaming-proxy-1/udf
+---------------------------------------------------------------------
+
+Too big error rate tvfs_release_django-prod-frontend-web-partial
+
+в дашборде: 
+tvfs_release_django-prod-frontend-web-partial/nginx-error
+
+или на машине
+tail -f /var/log/container/tvfs_release_django-prod-frontend-web-partial/nginx/error.log
+
+https://tradingview.slack.com/archives/C8VH5S0AJ/p1660135680712639
+
+
+---------------------------------------------------------------------
+на кластере алертов
+fra2-11-alerts-alert-executor-\d/tvbs
+---------------------------------------------------------------------
+
+посмотреть убитый процесс
+dmesg -T | grep -iC 10 killed | less

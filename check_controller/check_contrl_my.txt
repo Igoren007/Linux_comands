@@ -1,0 +1,94 @@
+--------------------------------------------------------------------------------------------------
+http proxy
+
+tail -f /var/log/container/http_proxy-lon1-controller-1/nginx_configurator.log
+tail -f /var/log/container/http_proxy-lon1-controller-1/nginx/access.log
+tail -f /var/log/container/http_proxy-lon1-controller-1/nginx/error.log
+--------------------------------------------------------------------------------------------------
+
+scribe
+посмотреть что логи записываются в файл
+
+tail -f /opt/scribe_logs/lon1-13-alerts-alert-monitor/lon1-13-alerts-alert-monitor-2022-08-04_0000
+
+и еще это
+
+tail -f /var/log/container/scribe-lon1-controller-1/scribe.log
+
+--------------------------------------------------------------------------------------------------
+rabbitmq
+
+tail -f /var/log/container/rabbitmq-lon1-controller-1/rabbitmq_monitor.log
+
+--------------------------------------------------------------------------------------------------
+fluentbit
+если ошибок нет - все ок
+
+tail -f /var/log/container/fluentbit-lon1-controller-1/fluentbit.log
+
+--------------------------------------------------------------------------------------------------
+admin_interface
+
+tail -f /var/log/container/admin_interface-lon1-controller-1/server.log
+tail -f /var/log/container/admin_interface-lon1-controller-1/interface.log
+tail -f /var/log/container/admin_interface-lon1-controller-1/unicorn.log
+
+--------------------------------------------------------------------------------------------------
+logcollector
+
+смотрим что поступают данные от какого-либо контейнера, например lon1-proxy-1
+tail -f /var/log/collector/lon1-proxy-1/lon1-proxy-1/inventory-service.log
+
+--------------------------------------------------------------------------------------------------
+zabbix-proxy
+
+tail -f /var/log/collector/lon1-controller-1/zabbix-proxy-lon1-controller-1/*.log
+
+--------------------------------------------------------------------------------------------------
+bind
+
+dig @127.0.0.1 -p 5353 -t SOA lon1
+tail -f /var/log/collector/lon1-controller-1/bind9-lon1-controller-1/named.log
+
+Также желательно проверить ответ DNS:
+nslookup *любая машина локации* *IP-адрес контроллера*
+nslookup lon1-compute-10 10.13.10.101
+
+--------------------------------------------------------------------------------------------------
+ldap
+docker ps | grep ldap-server  его статус должен быть healthy
+healthcheck && slapcat | wc -l
+
+--------------------------------------------------------------------------------------------------
+hiera server
+
+curl 'localhost:9090?key=scribe::log_cleaner&::service=tvbs'   Результат - валидный yaml
+
+--------------------------------------------------------------------------------------------------
+hiera hardware-puppet
+
+curl 'localhost:9191?key=to_array.docker::run_instance::default_envs'  Результат: валидный yaml
+
+--------------------------------------------------------------------------------------------------
+servicecfg
+
+curl -Lv http://127.0.0.1:9192/hosts | jq . | wc -l 
+tail -F /var/log/container/servicecfg-*-controller-*/*.log
+
+--------------------------------------------------------------------------------------------------
+zookeeper
+zookeepercli -servers localhost:2181 -c ls ""
+echo stat | nc localhost 2181
+
+--------------------------------------------------------------------------------------------------
+apt_cacher
+nc -zv 127.0.0.1 3142 2>&1
+
+--------------------------------------------------------------------------------------------------
+registry2
+c одной машины запросить образ
+sudo docker pull registry:5000/apt-cacher:master-22241
+с другой смотреть логи
+tail -F /var/log/container/registry2-chi1-controller-1/*.log
+
+--------------------------------------------------------------------------------------------------
