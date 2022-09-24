@@ -1,0 +1,5 @@
+Почистить файлы по пути:
+sudo find /var/log/journal/8691a/ -type f -mtime +10 -exec rm -f {} \;
+
+Скопировать файл:
+scp <path on your pc> <user>@<remote host>:<remote folder>
